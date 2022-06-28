@@ -43,12 +43,12 @@ impl std::error::Error for Error {}
 
 impl Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let margin = (self.col + 1).to_string().len() + 1;
-        let col = self.col + 1;
+        let line = self.line +1;
+        let margin = self.line.to_string().chars().count() + 2;
+        let err_col = self.col +1;
         write!(f,
-                "\x1b[31;1merror\x1b[0m: unexpected character\n{:>margin$}\n{} |{}\n{:>margin$}\x1b[31;1m{:>col$}\x1b[0m\n",
+                "\x1b[31;1merror\x1b[0m: unexpected character\n{:>margin$}\n{line} |{}\n{:>margin$}\x1b[31;1m{:>err_col$}\x1b[0m\n",
                 "|",
-                self.line,
                 self.text,
                 "|",
                 "^")
@@ -114,16 +114,16 @@ impl Lexer {
     }
 
     fn lex_boolean(&mut self, input: &str) -> Option<bool> {
-        let true_len = "true".len();
-        let false_len = "false".len();
+        let true_len = 4;
+        let false_len = 5;
 
-        if input[self.index..].len() >= true_len
+        if input[self.index..].chars().count() >= true_len
             && &input[self.index..self.index + true_len] == "true"
         {
             self.index += true_len;
             self.col += true_len;
             Some(true)
-        } else if input[self.index..].len() >= false_len
+        } else if input[self.index..].chars().count() >= false_len
             && &input[self.index..self.index + false_len] == "false"
         {
             self.index += false_len;
@@ -135,9 +135,9 @@ impl Lexer {
     }
 
     fn lex_null(&mut self, input: &str) -> bool {
-        let null_len = "null".len();
+        let null_len = 4;
 
-        if input[self.index..].len() >= null_len
+        if input[self.index..].chars().count() >= null_len
             && &input[self.index..self.index + null_len] == "null"
         {
             self.index += null_len;
@@ -166,7 +166,7 @@ impl Lexer {
     }
 
     pub(crate) fn lex(&mut self, input: &str) -> Result<Vec<Token>, Error> {
-        let input_len = input.len();
+        let input_len = input.chars().count();
         let mut tokens = vec![];
 
         while self.index < input_len {
@@ -211,8 +211,8 @@ impl Lexer {
             // otherwise return error
             return Err(Error {
                 text: input.lines().nth(self.line).unwrap().to_string(),
-                line: (self.col + 1).to_string().len() + 1,
                 col: self.col,
+                line: self.line,
             });
         }
 
