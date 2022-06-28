@@ -1,5 +1,5 @@
+use pepper::{Parser, Value};
 use std::collections::HashMap;
-use pepper::{Value,Parser};
 
 #[test]
 fn basic_parsing() {

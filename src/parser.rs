@@ -33,9 +33,9 @@ impl std::error::Error for Error {}
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Error::LexError(le) => write!(f,"{}",le),
+            Error::LexError(le) => write!(f, "{}", le),
             Error::ParseError(s) => write!(f, "\x1b[31;1merror\x1b[0m: {}\x1b[0m\n", s),
-        } 
+        }
     }
 }
 
@@ -110,7 +110,10 @@ impl Parser {
                     if tokens.peek() == Some(&&lexer::Token::Punct(':')) {
                         tokens.next();
                     } else {
-                        return Err(Error::ParseError(format!("expected ':', got '{:?}'", tokens.next())));
+                        return Err(Error::ParseError(format!(
+                            "expected ':', got '{:?}'",
+                            tokens.next()
+                        )));
                     }
 
                     let value = self.parse_value(tokens)?;
@@ -236,5 +239,4 @@ mod tests {
         let value = Parser::new().parse(&input).unwrap().unwrap();
         assert_eq!(value, Value::Object(hm));
     }
-
 }

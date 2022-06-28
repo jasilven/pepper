@@ -43,9 +43,9 @@ impl std::error::Error for Error {}
 
 impl Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let line = self.line +1;
+        let line = self.line + 1;
         let margin = self.line.to_string().chars().count() + 2;
-        let err_col = self.col +1;
+        let err_col = self.col + 1;
         write!(f,
                 "\x1b[31;1merror\x1b[0m: unexpected character\n{:>margin$}\n{line} |{}\n{:>margin$}\x1b[31;1m{:>err_col$}\x1b[0m\n",
                 "|",
