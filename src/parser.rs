@@ -1,9 +1,5 @@
 #![allow(dead_code)]
 
-// this is comment
-// and this is another comment
-// and the final comment line is here
-
 use crate::lexer;
 use std::collections::HashMap;
 use std::iter::{Iterator, Peekable};
